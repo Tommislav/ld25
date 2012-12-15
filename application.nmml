@@ -8,13 +8,15 @@
 	<!-- output -->
 	<app main="LD25" file="LD25" path="bin" />
 	
-	<window background="#ffffff" fps="30" />
+	<window background="#ffffff" fps="60" />
 	<window width="800" height="480" unless="mobile" />
 	<window orientation="landscape" vsync="true" antialiasing="0" if="cpp" />
 	
 	<!-- classpath, haxe libs -->
 	<source path="src" />
+	<source path="../seagal/src" />
 	<haxelib name="nme" />
+	<haxelib name="actuate" />
 	
 	<!-- assets -->
 	<icon path="assets/nme.svg" />
@@ -30,4 +32,5 @@
 	<haxeflag name="--dead-code-elimination" if="html5" />
 	<haxeflag name="--js-modern" if="html5" />
 	
+	<haxedef name="fdb" if="target_flash" />
 </project>

@@ -23,6 +23,7 @@ class LD25 extends Sprite
 		// entry point
 		
 		// new to Haxe NME? please read *carefully* the readme.txt file!
+		var gameScreen = new GameScreen();
 	}
 	
 	static public function main() 
