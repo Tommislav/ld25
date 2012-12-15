@@ -1,6 +1,6 @@
 package game.systems;
 import game.components.AngularMovementComponent;
-import game.components.PositionComponent;
+import game.components.CenterPointPositionComponent;
 import se.salomonsson.ent.GameTime;
 import se.salomonsson.ent.Sys;
 
@@ -22,13 +22,13 @@ class MoveWithAngularMovementSystem extends Sys
 			if (ang.speed == 0)
 				continue;
 				
-			var pos = ew.comp(PositionComponent);
+			var pos = ew.comp(CenterPointPositionComponent);
 			
 			var sx:Float = Math.cos(ang.radians) * ang.speed;
 			var sy:Float = Math.sin(ang.radians) * ang.speed;
 			
-			pos.x += Std.int(sx);
-			pos.y += Std.int(sy);
+			pos.x += sx;
+			pos.y += sy;
 		}
 	}
 	

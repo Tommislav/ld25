@@ -7,8 +7,8 @@ package game.utils;
 
 class Gun 
 {
-	public var offX:Int;
-	public var offY:Int;
+	public var offX:Float;
+	public var offY:Float;
 	public var directionRadians:Float;
 	public var reloadDuration:Int;
 	public var reloadTimer:Int;

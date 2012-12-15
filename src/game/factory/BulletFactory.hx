@@ -3,7 +3,7 @@ import flash.events.Event;
 import game.components.AngularMovementComponent;
 import game.components.BitmapComponent;
 import game.components.BulletComponent;
-import game.components.PositionComponent;
+import game.components.CenterPointPositionComponent;
 import game.components.XYSpeedComponent;
 import game.enums.TileId;
 import game.events.CreateBulletEvent;
@@ -44,22 +44,22 @@ class BulletFactory extends Sys
 		var firingGun:Gun = e.gun;
 		var firingEntity:EW = e.firingEntity;
 		
-		var entPos = firingEntity.comp(PositionComponent);
+		var entPos = firingEntity.comp(CenterPointPositionComponent);
 		var rot = firingEntity.comp(AngularMovementComponent);
-		var spawnX:Int = entPos.x;
-		var spawnY:Int = entPos.y;
+		var spawnX:Float = entPos.x;
+		var spawnY:Float = entPos.y;
 		
-		spawnX += Std.int(Math.cos(rot.radians) * firingGun.offX);
-		spawnY += Std.int(Math.sin(rot.radians) * firingGun.offX);
-		spawnX += Std.int(Math.cos(rot.radians) * firingGun.offY);
-		spawnY += Std.int(Math.sin(rot.radians) * firingGun.offY);
+		spawnX += (Math.cos(rot.radians) * firingGun.offX);
+		spawnY += (Math.sin(rot.radians) * firingGun.offX);
+		spawnX += (Math.cos(rot.radians) * firingGun.offY);
+		spawnY += (Math.sin(rot.radians) * firingGun.offY);
 		
 		var bulletSpeed = 16;
 		var sX:Float = Math.cos(rot.radians) * bulletSpeed;
 		var sY:Float = Math.sin(rot.radians) * bulletSpeed;
 		
 		var bullet = em().allocateEntity()
-			.addComponent(PositionComponent.build(spawnX, spawnY, 16, 16))
+			.addComponent(CenterPointPositionComponent.build(spawnX, spawnY, 2))
 			.addComponent(BitmapComponent.build(_tileMap.getTile(TileId.BULLET_0)))
 			.addComponent(XYSpeedComponent.build(sX, sY))
 			.addComponent(new BulletComponent());

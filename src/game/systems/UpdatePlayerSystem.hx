@@ -3,7 +3,7 @@ import game.components.AngularMovementComponent;
 import game.components.DamagebleComponent;
 import game.components.GunComponent;
 import game.components.PlayerComponent;
-import game.components.PositionComponent;
+import game.components.CenterPointPositionComponent;
 import nme.ui.Keyboard;
 import se.salomonsson.ent.EW;
 import se.salomonsson.ent.GameTime;
@@ -89,9 +89,9 @@ class UpdatePlayerSystem extends Sys
 		
 		_player.comp(AngularMovementComponent).setRadians(Math.atan2(_speedY, _speedX));
 		
-		var pos = em().getComp(PositionComponent);
-		pos.x += Std.int(_speedX);
-		pos.y += Std.int(_speedY);
+		var pos = em().getComp(CenterPointPositionComponent);
+		pos.x += _speedX;
+		pos.y += _speedY;
 		
 		
 		

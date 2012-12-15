@@ -5,7 +5,7 @@ import game.components.DamagebleComponent;
 import game.components.GameScreenComponent;
 import game.components.GunComponent;
 import game.components.PlayerComponent;
-import game.components.PositionComponent;
+import game.components.CenterPointPositionComponent;
 import game.enums.TileId;
 import game.factory.BulletFactory;
 import game.systems.CameraTrackPlayerSystem;
@@ -53,10 +53,10 @@ class GameScreen
 		
 		// Hero (or in this case: villain) entity
 		_core.getEntManager().allocateEntity()
-			.addComponent(PositionComponent.build(10, 10, 32, 32))
+			.addComponent(CenterPointPositionComponent.build(10, 10, 32))
 			.addComponent(AngularMovementComponent.build(-90, 0))
 			.addComponent(BitmapComponent.build(_tileMap.getTile(TileId.HERO_0)))
-			.addComponent(new GunComponent().addGun(Gun.build(40, 0, 0, 25, "")))
+			.addComponent(new GunComponent().addGun(Gun.build(36, 0, 0, 25, "")))
 			.addComponent(new DamagebleComponent(3))
 			.addComponent(new PlayerComponent());
 		
@@ -68,10 +68,12 @@ class GameScreen
 		
 		_core.addSystem(new KeyboardInputSystem(), 9);
 		
-		_core.addSystem(new UpdatePlayerSystem(), 8);
-		_core.addSystem(new UpdateBulletsSystem(), 8);
+		_core.addSystem(new MoveWithXYSpeedSystem(), 8);
 		
-		_core.addSystem(new MoveWithXYSpeedSystem(), 7);
+		_core.addSystem(new UpdatePlayerSystem(), 7);
+		_core.addSystem(new UpdateBulletsSystem(), 7);
+		
+		
 		_core.addSystem(new GunSystem(), 7);
 		_core.addSystem(new CameraTrackPlayerSystem(), 7);
 		_core.addSystem(new UpdateDamagablesSystem(), 7);
@@ -107,8 +109,8 @@ class GameScreen
 	private function enemyFactory(x, y) {
 		// Enemy (a guard)
 		_core.getEntManager().allocateEntity()
-			.addComponent(PositionComponent.build(x, y, 32, 32))
-			.addComponent(AngularMovementComponent.build(105, 0))
+			.addComponent(CenterPointPositionComponent.build(x, y, 32))
+			.addComponent(AngularMovementComponent.build(0, 3))
 			.addComponent(BitmapComponent.build(_tileMap.getTile(TileId.GUARD_0)))
 			.addComponent(new DamagebleComponent());
 	}

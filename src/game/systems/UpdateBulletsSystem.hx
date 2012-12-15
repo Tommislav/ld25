@@ -2,7 +2,7 @@ package game.systems;
 import game.components.BitmapComponent;
 import game.components.BulletComponent;
 import game.components.DamagebleComponent;
-import game.components.PositionComponent;
+import game.components.CenterPointPositionComponent;
 import se.salomonsson.ent.EW;
 import se.salomonsson.ent.GameTime;
 import se.salomonsson.ent.Sys;
@@ -32,17 +32,17 @@ class UpdateBulletsSystem extends Sys
 		
 		var allBullets = em().getEWC([BulletComponent]);
 		for (bullet in allBullets) {
-			var pos = bullet.comp(PositionComponent);
+			var pos = bullet.comp(CenterPointPositionComponent);
 			
 			if (_camera.inView(pos) == false) {
 				destroyBullet(bullet);
 				continue; 
 			}
 			
-			var bulletPos = bullet.comp(PositionComponent);
+			var bulletPos = bullet.comp(CenterPointPositionComponent);
 			for (e in damageableEntities) {
-				var pos = e.comp(PositionComponent);
-				if (bulletCollision(bulletPos.x, bulletPos.y, pos)) {
+				var pos = e.comp(CenterPointPositionComponent);
+				if (bulletPos.intersects(pos)) {
 					e.comp(DamagebleComponent).health -= 1;
 					destroyBullet(bullet);
 					continue;
@@ -51,14 +51,7 @@ class UpdateBulletsSystem extends Sys
 		}
 	}
 	
-	private function bulletCollision(bulletX:Int, bulletY:Int, testAgainst:PositionComponent):Bool {
-		if (bulletX > (testAgainst.x - testAgainst.width) && bulletX < (testAgainst.x + testAgainst.width)) {
-			if (bulletY > (testAgainst.y - testAgainst.height) && bulletY < testAgainst.y + testAgainst.height) {
-				return true;
-			}
-		}
-		return false;
-	}
+	
 	
 	private function destroyBullet(e:EW) {
 		var bulletBitmapComponent = e.comp(BitmapComponent);

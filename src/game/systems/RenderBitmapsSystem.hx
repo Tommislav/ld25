@@ -1,7 +1,7 @@
 package game.systems;
 import game.components.AngularMovementComponent;
 import game.components.BitmapComponent;
-import game.components.PositionComponent;
+import game.components.CenterPointPositionComponent;
 import nme.display.Bitmap;
 import nme.display.DisplayObjectContainer;
 import nme.display.Sprite;
@@ -41,7 +41,7 @@ class RenderBitmapsSystem extends Sys
 		
 		for (ew in allRenderables) {
 			var bitmapHolder:Sprite = ew.comp(BitmapComponent).holder;
-			var pos = ew.comp(PositionComponent);
+			var pos = ew.comp(CenterPointPositionComponent);
 			bitmapHolder.x = pos.x - _camera.x;
 			bitmapHolder.y = pos.y - _camera.y;
 			
@@ -62,20 +62,5 @@ class RenderBitmapsSystem extends Sys
 			bitmapHolder.rotation = rot.angle;
 			rot.setDegrees(rot.angle + 1);
 		}
-	}
-	
-	private function inCamera(pos:PositionComponent, camera:CameraComponent) 
-	{
-		var left = pos.x - pos.width;
-		var right = pos.x + pos.width;
-		var top = pos.y - pos.height;
-		var bottom = pos.y + pos.height;
-		
-		if (right > camera.x && left < (camera.x + camera.width)) {
-			if (bottom > camera.y && top < (camera.y + camera.height)) {
-				return true;
-			}
-		}
-		return false;
 	}
 }
