@@ -6,17 +6,17 @@ import se.salomonsson.ent.IComponent;
  * @author Tommislav
  */
 
-class CatComponent implements IComponent
+class GameComponent implements IComponent
 {
-	public var active:Bool;
-	public var captured:Bool;
-	
+	public var score:Int;
+	public var money:Int;
+	public var catsKilled:Int;
+	public var catsTotal:Int;
 	
 	
 	public function new() 
 	{
-		active = true;
-		captured = false;
+		
 	}
 	
 }

@@ -8,11 +8,11 @@ import nme.events.Event;
 
 class CreateEnemyEvent extends Event
 {
-	
+	inline public static var SPAWN:String = "CreateEnemyEvent.SPAWN";
 	
 	public function new(type:String) 
 	{
-		super();
+		super(type);
 	}
 	
 }

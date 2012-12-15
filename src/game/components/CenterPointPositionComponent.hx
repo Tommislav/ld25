@@ -26,8 +26,8 @@ class CenterPointPositionComponent implements IComponent
 		var minDist = radius + otherPos.radius;
 		
 		// quick optimization
-		//if (Math.abs(dx) > (minDist+150) || Math.abs(dy) > (minDist+150))
-			//return false;
+		if (Math.abs(dx) > (minDist+150) || Math.abs(dy) > (minDist+150))
+			return false;
 		
 		var dist = Math.sqrt((dx * dx) + (dy * dy));
 		var minDist = radius + otherPos.radius;

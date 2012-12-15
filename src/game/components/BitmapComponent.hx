@@ -22,6 +22,11 @@ class BitmapComponent implements IComponent
 		
 	}
 	
+	public function remove() {
+		if (holder.parent != null)
+			holder.parent.removeChild(holder);
+	}
+	
 	public static function build(td:TileData, frameNumber = 0) {
 		var c = new BitmapComponent();
 		c.holder = new Sprite();
