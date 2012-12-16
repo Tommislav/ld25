@@ -16,6 +16,7 @@ import game.factory.CatFactory;
 import game.factory.EnemyFactory;
 import game.factory.TextFactory;
 import game.systems.CameraTrackPlayerSystem;
+import game.systems.EnemySystem;
 import game.systems.FaceDirectionSystem;
 import game.systems.GameSystem;
 import game.systems.GunSystem;
@@ -29,6 +30,7 @@ import game.systems.UpdateCatTrackersSystem;
 import game.systems.UpdateDamagablesSystem;
 import game.systems.UpdateEscortingEntitiesSystem;
 import game.systems.UpdatePlayerSystem;
+import game.systems.RenderBackgroundTilesSystem;
 import game.utils.Gun;
 import game.utils.TileMap;
 import nme.Assets;
@@ -46,6 +48,8 @@ import se.salomonsson.game.components.TileModelComponent;
 import se.salomonsson.game.components.ViewPortComponent;
 import se.salomonsson.game.systems.DebugCameraPositionSystem;
 import se.salomonsson.game.systems.KeyboardInputSystem;
+
+
 import se.salomonsson.game.systems.RenderViewPortSystem;
 import se.salomonsson.game.utils.PixelMapParser;
 
@@ -93,7 +97,7 @@ class GameScreen
 		
 		// Hero (or in this case: villain) entity
 		_core.getEntManager().allocateEntity()
-			.addComponent(CenterPointPositionComponent.build(10, 10, 32))
+			.addComponent(CenterPointPositionComponent.build(500, 500, 32))
 			.addComponent(AngularMovementComponent.build(-90, 0))
 			.addComponent(BitmapComponent.build(_tileMap.getTile(TileId.HERO_0)))
 			.addComponent(gunComp)
@@ -121,19 +125,28 @@ class GameScreen
 		_core.addSystem(new UpdateCatTrackersSystem(), 6);
 		_core.addSystem(new UpdateEscortingEntitiesSystem(), 6);
 		_core.addSystem(new FaceDirectionSystem(), 6);
+		_core.addSystem(new EnemySystem(), 6);
 		
 		_core.addSystem(new UpdateDamagablesSystem(), 2);
 		
 		_core.addSystem(new RenderBitmapsSystem(Lib.current.stage), 1);
-		_core.addSystem(new RenderViewPortSystem("main", tiles), 1);
+		_core.addSystem(new RenderBackgroundTilesSystem("main", tiles), 1);
 		_core.addSystem(new DebugCameraPositionSystem(Lib.current.stage), 1);
 		
 		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		
 		
 		// create some random enemies
+		var enemyType:String;
 		for (i in 0...10) {
-			_core.getSystemManager().getEventDispatcher().dispatchEvent(new CreateEnemyEvent(CreateEnemyEvent.SPAWN, EnemyType.RANDOM));
+			//if (i < 3)
+				//enemyType = EnemyType.RANDOM;
+			//else if (i < 6)
+				//enemyType = EnemyType.RANDOM_FAST;
+			//else
+				enemyType = EnemyType.FIRE_TOWARDS_PLAYER;
+			
+			_core.getSystemManager().getEventDispatcher().dispatchEvent(new CreateEnemyEvent(CreateEnemyEvent.SPAWN, enemyType));
 		}
 	}
 	

@@ -1,6 +1,7 @@
 package game.systems;
 import game.components.BitmapComponent;
 import game.components.DamagebleComponent;
+import game.components.PlayerComponent;
 import se.salomonsson.ent.EW;
 import se.salomonsson.ent.GameTime;
 import se.salomonsson.ent.Sys;
@@ -20,12 +21,14 @@ class UpdateDamagablesSystem extends Sys
 	
 	override public function tick(gt:GameTime):Void 
 	{
+		var player = em().getEWC([PlayerComponent])[0];
+		
 		var allDamagebleEntities = em().getEWC([DamagebleComponent]);
 		for (dmgEntity in allDamagebleEntities) {
 			var dmg = dmgEntity.comp(DamagebleComponent);
 			if (dmg.health != dmg.prevHealth) {
 				dmg.prevHealth = dmg.health;
-				if (dmg.health <= 0) {
+				if (dmg.health <= 0 && (dmgEntity.getEntity() != player.getEntity())) {
 					destroyEntity(dmgEntity);
 				}
 			}

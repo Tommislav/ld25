@@ -59,9 +59,9 @@ class GameSystem extends Sys
 	
 	private function onCatCreated(e:GameEvent):Void 
 	{
-		var catId:Int = e.data;
-		for (i in 0...8) {
-			dispatch(new CreateEnemyEvent(CreateEnemyEvent.SPAWN, EnemyType.RANDOM, catId, i));
+		var kittenId:Int = e.data;
+		for (i in 0...4) {
+			dispatch(new CreateEnemyEvent(CreateEnemyEvent.SPAWN, EnemyType.RANDOM, kittenId, i));
 		}
 	}
 }

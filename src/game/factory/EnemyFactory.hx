@@ -2,11 +2,14 @@ package game.factory;
 import game.components.AngularMovementComponent;
 import game.components.BitmapComponent;
 import game.components.CenterPointPositionComponent;
+import game.components.CollidableComponent;
 import game.components.DamagebleComponent;
+import game.components.EnemyComponent;
 import game.components.EscortObjectComponent;
 import game.components.FaceDirectionComponent;
 import game.components.GameComponent;
 import game.components.TileMapComponent;
+import game.enums.EnemyType;
 import game.enums.TileId;
 import game.events.CreateEnemyEvent;
 import game.utils.TileMap;
@@ -43,19 +46,17 @@ class EnemyFactory extends Sys
 	private function onSpawnNewEnemy(event:CreateEnemyEvent) {
 		
 		
-		
-		
-		
 		// Enemy (a guard)
 		var enemy = em().allocateEntity();
 		
 		// --- Position ---
-		var pos = CenterPointPositionComponent.build(0, 0, 48);
+		var pos = CenterPointPositionComponent.build(0, 0, 42);
 		if (event.otherEntity > -1) {
 			var ang:Array<Float> = 
 				[0, Math.PI, Math.PI / 2, Math.PI * 1.5, 
 				Math.PI/4, Math.PI*0.75, Math.PI*1.25, Math.PI * 1.75];
-			var dist:Array<Float> = [100.0, 100.0, 100.0, 100.0, 200.0, 200.0, 200.0, 200.0];
+			var dist:Array<Float> = [200.0, 200.0, 200.0, 200.0, 
+				100.0, 100.0, 100.0, 100.0];
 			
 			var index = (event.enemyIndex > -1) ? event.enemyIndex : 1;
 			
@@ -73,9 +74,10 @@ class EnemyFactory extends Sys
 		}
 		enemy.addComponent(pos);
 		
-		
-		enemy.addComponent(AngularMovementComponent.build(Math.random() * 360, 0));
+		enemy.addComponent(new CollidableComponent());
+		enemy.addComponent(AngularMovementComponent.build(180, 0));
 		enemy.addComponent(BitmapComponent.build(_tileMap.getTile(TileId.GUARD_0)));
+		enemy.addComponent(EnemyComponent.build(event.enemyType));
 		enemy.addComponent(new DamagebleComponent());
 	}
 }

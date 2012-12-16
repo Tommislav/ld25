@@ -30,8 +30,12 @@ class UpdateCatsSystem extends Sys
 	override public function tick(gt:GameTime):Void 
 	{
 		var gameComponent = em().getComp(GameComponent);
-		var player = em().getEWC([PlayerComponent])[0];
-		var playerPos = player.comp(CenterPointPositionComponent);
+		var player = em().getEWC([PlayerComponent]);
+		if (player.length == 0) {
+			return;
+		}
+		
+		var playerPos = player[0].comp(CenterPointPositionComponent);
 		
 		var allCatEntities = em().getEWC([CatComponent]);
 		for (catEntity in allCatEntities) {

@@ -2,6 +2,7 @@ package ;
 
 import nme.display.Sprite;
 import nme.events.Event;
+import nme.events.MouseEvent;
 import nme.Lib;
 
 /**
@@ -22,7 +23,14 @@ class LD25 extends Sprite
 	{
 		// entry point
 		
-		// new to Haxe NME? please read *carefully* the readme.txt file!
+		var splashScreen = new SplashScreen();
+		addChild(splashScreen);
+		splashScreen.addEventListener(MouseEvent.CLICK, showGameScreen);
+	}
+	
+	private function showGameScreen(e:MouseEvent):Void 
+	{
+		e.currentTarget.removeEventListener(MouseEvent.CLICK, showGameScreen);
 		var gameScreen = new GameScreen();
 	}
 	

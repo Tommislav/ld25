@@ -1,10 +1,12 @@
 package game.systems;
 import game.components.AngularMovementComponent;
+import game.components.CollidableComponent;
 import game.components.DamagebleComponent;
 import game.components.GameComponent;
 import game.components.GunComponent;
 import game.components.PlayerComponent;
 import game.components.CenterPointPositionComponent;
+import game.events.GameEvent;
 import nme.ui.Keyboard;
 import se.salomonsson.ent.EW;
 import se.salomonsson.ent.GameTime;
@@ -49,7 +51,10 @@ class UpdatePlayerSystem extends Sys
 	
 	override public function tick(gt:GameTime):Void 
 	{
+		var rotComp = _player.comp(AngularMovementComponent);
+		
 		if (_health.health == 0) {
+			rotComp.setDegrees(rotComp.angle + 5);
 			trace("I am dead!");
 			return;
 		}
@@ -88,7 +93,7 @@ class UpdatePlayerSystem extends Sys
 		else if (_speedY > _maxSpeed)
 			_speedY = _maxSpeed;
 		
-		_player.comp(AngularMovementComponent).setRadians(Math.atan2(_speedY, _speedX));
+		rotComp.setRadians(Math.atan2(_speedY, _speedX));
 		
 		var pos = em().getComp(CenterPointPositionComponent);
 		pos.x += _speedX;
@@ -114,6 +119,21 @@ class UpdatePlayerSystem extends Sys
 				if (gun.canFire()) {
 					gun.fire();
 				}
+			}
+		}
+		
+		
+		// Check for collision against enemy ships
+		var collidables = em().getEWC([CollidableComponent]);
+		for (coll in collidables) {
+			var enemyPos = coll.comp(CenterPointPositionComponent);
+			if (pos.intersects(enemyPos)) {
+				coll.comp(DamagebleComponent).health--;
+				_health.health--;
+				em().getComp(GameComponent).playerWasDamaged();
+				dispatch(new GameEvent(GameEvent.PLAYER_DAMAGE, null));
+				_speedX *= -1;
+				_speedY *= -1;
 			}
 		}
 	}

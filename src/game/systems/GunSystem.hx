@@ -1,5 +1,7 @@
 package game.systems;
+import game.components.EnemyComponent;
 import game.components.GunComponent;
+import game.enums.BulletType;
 import game.events.CreateBulletEvent;
 import se.salomonsson.ent.GameTime;
 import se.salomonsson.ent.Sys;
@@ -23,7 +25,7 @@ class GunSystem extends Sys
 				gun.tick();
 				if (gun.gunHasBeenFired) {
 					gun.gunHasBeenFired = false;
-					dispatch(new CreateBulletEvent(CreateBulletEvent.SPAWN, gun, entityWithGuns));
+					dispatch(new CreateBulletEvent(CreateBulletEvent.SPAWN, gun, entityWithGuns, BulletType.PLAYER));
 				}
 			}
 		}

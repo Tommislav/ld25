@@ -5,6 +5,7 @@ import game.components.BitmapComponent;
 import game.components.BulletComponent;
 import game.components.CenterPointPositionComponent;
 import game.components.XYSpeedComponent;
+import game.enums.BulletType;
 import game.enums.TileId;
 import game.events.CreateBulletEvent;
 import game.utils.Gun;
@@ -43,6 +44,7 @@ class BulletFactory extends Sys
 	{
 		var firingGun:Gun = e.gun;
 		var firingEntity:EW = e.firingEntity;
+		var bulletImmuneTypes = e.bulletImmuneTypes;
 		
 		var entPos = firingEntity.comp(CenterPointPositionComponent);
 		var rot = firingEntity.comp(AngularMovementComponent);
@@ -56,7 +58,7 @@ class BulletFactory extends Sys
 		spawnY += (Math.sin(offRad) * offDist);
 		
 		
-		var bulletSpeed = 16;
+		var bulletSpeed = (e.bulletType == BulletType.PLAYER) ? 16 : 3;
 		var sX:Float = Math.cos(rot.radians + firingGun.directionRadians) * bulletSpeed;
 		var sY:Float = Math.sin(rot.radians + firingGun.directionRadians) * bulletSpeed;
 		
@@ -64,6 +66,6 @@ class BulletFactory extends Sys
 			.addComponent(CenterPointPositionComponent.build(spawnX, spawnY, 2))
 			.addComponent(BitmapComponent.build(_tileMap.getTile(TileId.BULLET_0)))
 			.addComponent(XYSpeedComponent.build(sX, sY))
-			.addComponent(new BulletComponent());
+			.addComponent(BulletComponent.build(bulletImmuneTypes));
 	}
 }

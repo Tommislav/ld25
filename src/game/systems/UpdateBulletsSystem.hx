@@ -3,6 +3,8 @@ import game.components.BitmapComponent;
 import game.components.BulletComponent;
 import game.components.DamagebleComponent;
 import game.components.CenterPointPositionComponent;
+import game.components.GameComponent;
+import game.components.PlayerComponent;
 import se.salomonsson.ent.EW;
 import se.salomonsson.ent.GameTime;
 import se.salomonsson.ent.Sys;
@@ -43,8 +45,27 @@ class UpdateBulletsSystem extends Sys
 			for (e in damageableEntities) {
 				var pos = e.comp(CenterPointPositionComponent);
 				if (bulletPos.intersects(pos)) {
-					e.comp(DamagebleComponent).health -= 1;
+					
+					var bulletImmuneTypes = bullet.comp(BulletComponent).immuneTypes;
+					if (bulletImmuneTypes.length > 0) {
+						for (immunType in bulletImmuneTypes) {
+							if (e.hasComponent(immunType))
+								return;
+						}
+					}
+					
+					var dmg = e.comp(DamagebleComponent);
+					dmg.health -= 1;
+					if (dmg.health < 0)
+						dmg.health = 0;
+					
 					destroyBullet(bullet);
+					
+					if (e.hasComponent(PlayerComponent)) {
+						// player was shot
+						em().getComp(GameComponent).playerWasDamaged();
+					}
+					
 					continue;
 				}
 			}

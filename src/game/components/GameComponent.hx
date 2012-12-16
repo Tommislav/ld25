@@ -15,10 +15,15 @@ class GameComponent implements IComponent
 	public var catsTotal:Int;
 	
 	public var levelBounds:Rectangle;
+	public var playerDamageCounter:Int;
 	
 	public function new() 
 	{
 		levelBounds = new Rectangle(0, 0, 5000, 5000);
+	}
+	
+	public function playerWasDamaged() {
+		playerDamageCounter = 6;
 	}
 	
 }
