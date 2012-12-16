@@ -49,14 +49,16 @@ class BulletFactory extends Sys
 		var spawnX:Float = entPos.x;
 		var spawnY:Float = entPos.y;
 		
-		spawnX += (Math.cos(rot.radians) * firingGun.offX);
-		spawnY += (Math.sin(rot.radians) * firingGun.offX);
-		spawnX += (Math.cos(rot.radians) * firingGun.offY);
-		spawnY += (Math.sin(rot.radians) * firingGun.offY);
+		var offRad = rot.radians + firingGun.spawnOffsetAngle;
+		var offDist = firingGun.spawnOffsetDistance;
+		
+		spawnX += (Math.cos(offRad) * offDist);
+		spawnY += (Math.sin(offRad) * offDist);
+		
 		
 		var bulletSpeed = 16;
-		var sX:Float = Math.cos(rot.radians) * bulletSpeed;
-		var sY:Float = Math.sin(rot.radians) * bulletSpeed;
+		var sX:Float = Math.cos(rot.radians + firingGun.directionRadians) * bulletSpeed;
+		var sY:Float = Math.sin(rot.radians + firingGun.directionRadians) * bulletSpeed;
 		
 		var bullet = em().allocateEntity()
 			.addComponent(CenterPointPositionComponent.build(spawnX, spawnY, 2))

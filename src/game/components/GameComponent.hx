@@ -1,4 +1,5 @@
 package game.components;
+import nme.geom.Rectangle;
 import se.salomonsson.ent.IComponent;
 
 /**
@@ -13,11 +14,11 @@ class GameComponent implements IComponent
 	public var catsKilled:Int;
 	public var catsTotal:Int;
 	
-	
+	public var levelBounds:Rectangle;
 	
 	public function new() 
 	{
-		
+		levelBounds = new Rectangle(0, 0, 5000, 5000);
 	}
 	
 }

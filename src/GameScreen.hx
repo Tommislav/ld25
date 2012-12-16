@@ -8,11 +8,15 @@ import game.components.GunComponent;
 import game.components.PlayerComponent;
 import game.components.CenterPointPositionComponent;
 import game.components.TileMapComponent;
+import game.enums.EnemyType;
 import game.enums.TileId;
+import game.events.CreateEnemyEvent;
 import game.factory.BulletFactory;
 import game.factory.CatFactory;
+import game.factory.EnemyFactory;
 import game.factory.TextFactory;
 import game.systems.CameraTrackPlayerSystem;
+import game.systems.FaceDirectionSystem;
 import game.systems.GameSystem;
 import game.systems.GunSystem;
 import game.systems.LifeParticleSystem;
@@ -23,6 +27,7 @@ import game.systems.UpdateBulletsSystem;
 import game.systems.UpdateCatsSystem;
 import game.systems.UpdateCatTrackersSystem;
 import game.systems.UpdateDamagablesSystem;
+import game.systems.UpdateEscortingEntitiesSystem;
 import game.systems.UpdatePlayerSystem;
 import game.utils.Gun;
 import game.utils.TileMap;
@@ -78,21 +83,22 @@ class GameScreen
 		//_core.getEntManager().allocateEntity()
 			
 		
-			
+		
+		var gunComp:GunComponent = new GunComponent();
+		gunComp.addGun(Gun.build(0, 36, 0, 25, ""));
+		gunComp.addGun(Gun.build(Math.PI, 36, Math.PI, 25, ""));
+		gunComp.addGun(Gun.build(Math.PI/2, 36, Math.PI/2, 25, ""));
+		gunComp.addGun(Gun.build(Math.PI*1.5, 36, Math.PI*1.5, 25, ""));
+		
 		
 		// Hero (or in this case: villain) entity
 		_core.getEntManager().allocateEntity()
 			.addComponent(CenterPointPositionComponent.build(10, 10, 32))
 			.addComponent(AngularMovementComponent.build(-90, 0))
 			.addComponent(BitmapComponent.build(_tileMap.getTile(TileId.HERO_0)))
-			.addComponent(new GunComponent().addGun(Gun.build(36, 0, 0, 25, "")))
+			.addComponent(gunComp)
 			.addComponent(new DamagebleComponent(3))
 			.addComponent(new PlayerComponent());
-		
-		// create some random enemies
-		for (i in 0...10) {
-			enemyFactory(Std.int(Math.random() * 1000), Std.int(Math.random() * 1000));
-		}
 		
 		
 		_core.addSystem(new KeyboardInputSystem(), 9);
@@ -111,7 +117,10 @@ class GameScreen
 		_core.addSystem(new BulletFactory(_tileMap), 6);
 		_core.addSystem(new CatFactory(_tileMap), 6);
 		_core.addSystem(new TextFactory(_tileMap), 6);
+		_core.addSystem(new EnemyFactory(), 6);
 		_core.addSystem(new UpdateCatTrackersSystem(), 6);
+		_core.addSystem(new UpdateEscortingEntitiesSystem(), 6);
+		_core.addSystem(new FaceDirectionSystem(), 6);
 		
 		_core.addSystem(new UpdateDamagablesSystem(), 2);
 		
@@ -120,6 +129,12 @@ class GameScreen
 		_core.addSystem(new DebugCameraPositionSystem(Lib.current.stage), 1);
 		
 		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+		
+		
+		// create some random enemies
+		for (i in 0...10) {
+			_core.getSystemManager().getEventDispatcher().dispatchEvent(new CreateEnemyEvent(CreateEnemyEvent.SPAWN, EnemyType.RANDOM));
+		}
 	}
 	
 	private function onEnterFrame(e:Event):Void 
@@ -142,18 +157,6 @@ class GameScreen
 		_tileMap.mapTile(TileId.CAT_MARKER, bd, new Rectangle(192, 16, 16, 16));
 		_tileMap.mapTile(TileId.TEXT_CAT_KIDNAPPED, bd, new Rectangle(192, 64, 128, 32));
 		_tileMap.mapTile(TileId.TEXT_CAT_KILLED, bd, new Rectangle(192, 96, 128, 32));
-	}
-	
-	
-	
-	
-	private function enemyFactory(x, y) {
-		// Enemy (a guard)
-		_core.getEntManager().allocateEntity()
-			.addComponent(CenterPointPositionComponent.build(x, y, 48))
-			.addComponent(AngularMovementComponent.build(0, 3))
-			.addComponent(BitmapComponent.build(_tileMap.getTile(TileId.GUARD_0)))
-			.addComponent(new DamagebleComponent());
 	}
 	
 	

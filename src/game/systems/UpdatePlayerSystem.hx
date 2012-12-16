@@ -1,6 +1,7 @@
 package game.systems;
 import game.components.AngularMovementComponent;
 import game.components.DamagebleComponent;
+import game.components.GameComponent;
 import game.components.GunComponent;
 import game.components.PlayerComponent;
 import game.components.CenterPointPositionComponent;
@@ -93,6 +94,17 @@ class UpdatePlayerSystem extends Sys
 		pos.x += _speedX;
 		pos.y += _speedY;
 		
+		
+		var levelBounds = em().getComp(GameComponent).levelBounds;
+		if (pos.x < levelBounds.x)
+			pos.x = levelBounds.x;
+		else if (pos.x > levelBounds.right)
+			pos.x = levelBounds.right;
+		
+		if (pos.y < levelBounds.y)
+			pos.y = levelBounds.y;
+		else if (pos.y > levelBounds.bottom)
+			pos.y = levelBounds.bottom;
 		
 		
 		

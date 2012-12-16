@@ -7,8 +7,8 @@ package game.utils;
 
 class Gun 
 {
-	public var offX:Float;
-	public var offY:Float;
+	public var spawnOffsetAngle:Float;
+	public var spawnOffsetDistance:Float;
 	public var directionRadians:Float;
 	public var reloadDuration:Int;
 	public var reloadTimer:Int;
@@ -36,10 +36,10 @@ class Gun
 	}
 	
 	
-	public static function build(offX:Int, offY:Int, directionInRadians:Float, reloadDuration:Int, bulletType:String="") {
+	public static function build(spawnOffsetAngle:Float, spawnOffsetDistance:Float, directionInRadians:Float, reloadDuration:Int, bulletType:String="") {
 		var gun:Gun = new Gun();
-		gun.offX = offX;
-		gun.offY = offY;
+		gun.spawnOffsetAngle = spawnOffsetAngle;
+		gun.spawnOffsetDistance = spawnOffsetDistance;
 		gun.directionRadians = directionInRadians;
 		gun.reloadDuration = reloadDuration;
 		gun.bulletType = bulletType;

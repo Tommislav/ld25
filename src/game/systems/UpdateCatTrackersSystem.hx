@@ -6,6 +6,9 @@ import game.components.CatTrackerComponent;
 import game.components.CenterPointPositionComponent;
 import game.components.DamagebleComponent;
 import game.components.PlayerComponent;
+import game.events.GameEvent;
+import se.salomonsson.ent.EntityEvent;
+import se.salomonsson.ent.EW;
 import se.salomonsson.ent.GameTime;
 import se.salomonsson.ent.Sys;
 import se.salomonsson.game.components.CameraComponent;
@@ -17,19 +20,32 @@ import se.salomonsson.game.components.CameraComponent;
 
 class UpdateCatTrackersSystem extends Sys
 {
-
+	private var _frame:Int;
+	
 	public function new() { super(); }
 	
 	override public function onAdded(sm, em):Void 
 	{
 		super.onAdded(sm, em);
-		// Add listener for cat removed
+		em.addListener(EntityEvent.ENTITY_DESTROYED, onCatRemoved);
 	}
 	
 	override public function onRemoved():Void 
 	{
 		super.onRemoved();
-		// Remove listener for cat removed
+		em().removeListener(EntityEvent.ENTITY_DESTROYED, onCatRemoved);
+	}
+	
+	private function onCatRemoved(e:EntityEvent):Void 
+	{
+		var entityRemoved:Int = e.entity;
+		var allTrackers = em().getEWC([CatTrackerComponent]);
+		for (tracker in allTrackers) {
+			if (tracker.comp(CatTrackerComponent).catToTrack == entityRemoved) {
+				removeTracker(tracker);
+				return;
+			}
+		}
 	}
 	
 	override public function tick(gt:GameTime):Void 
@@ -37,7 +53,8 @@ class UpdateCatTrackersSystem extends Sys
 		var player = em().getEWC([PlayerComponent]);
 		if (player.length == 0)
 			return;
-			
+		
+		
 		var playerPos = player[0].comp(CenterPointPositionComponent);
 		var camera = em().getComp(CameraComponent);
 		
@@ -50,8 +67,7 @@ class UpdateCatTrackersSystem extends Sys
 			var catHealth = em().getComponentOnEntity(catId, DamagebleComponent);
 			
 			if (cat == null || catHealth.health == 0) {
-				tracker.comp(BitmapComponent).remove();
-				tracker.destroy();
+				removeTracker(tracker);
 				continue;
 				
 			} else {
@@ -74,6 +90,11 @@ class UpdateCatTrackersSystem extends Sys
 				tracker.comp(AngularMovementComponent).setRadians(angle);
 			}
 		}
+	}
+	
+	private function removeTracker(e:EW) {
+		e.comp(BitmapComponent).remove();
+		e.destroy();
 	}
 	
 }

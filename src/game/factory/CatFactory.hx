@@ -10,6 +10,7 @@ import game.components.PlayerComponent;
 import game.components.XYSpeedComponent;
 import game.enums.TileId;
 import game.events.CreateCatEvent;
+import game.events.GameEvent;
 import game.utils.TileMap;
 import se.salomonsson.ent.EntManager;
 import se.salomonsson.ent.Sys;
@@ -66,6 +67,8 @@ class CatFactory extends Sys
 			.addComponent(AngularMovementComponent.build(0, 0))
 			.addComponent(BitmapComponent.build(_tileMap.getTile(TileId.CAT_MARKER)))
 			.addComponent(CatTrackerComponent.build(cat.getEntity()));
+		
+		dispatch(new GameEvent(GameEvent.CAT_CREATED, cat.getEntity()));
 	}
 	
 }
