@@ -60,7 +60,6 @@ class RenderBitmapsSystem extends Sys
 			
 			var rot = ew.comp(AngularMovementComponent);
 			bitmapHolder.rotation = rot.angle;
-			rot.setDegrees(rot.angle + 1);
 		}
 	}
 }

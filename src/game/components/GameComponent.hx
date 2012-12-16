@@ -14,6 +14,7 @@ class GameComponent implements IComponent
 	public var catsTotal:Int;
 	
 	
+	
 	public function new() 
 	{
 		

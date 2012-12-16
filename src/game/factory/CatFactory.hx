@@ -1,6 +1,8 @@
 package game.factory;
+import game.components.AngularMovementComponent;
 import game.components.BitmapComponent;
 import game.components.CatComponent;
+import game.components.CatTrackerComponent;
 import game.components.CenterPointPositionComponent;
 import game.components.DamagebleComponent;
 import game.components.GameComponent;
@@ -43,6 +45,7 @@ class CatFactory extends Sys
 	{
 		em().getComp(GameComponent).catsTotal += 1;
 		
+		
 		var catSpeed = 2;
 		var dx = e.fromX - e.toX;
 		var dy = e.fromY - e.toY;
@@ -51,12 +54,18 @@ class CatFactory extends Sys
 		var sy = Math.sin(angle) * catSpeed;
 		
 		
-		em().allocateEntity()
+		var cat = em().allocateEntity()
 			.addComponent(CenterPointPositionComponent.build(e.fromX, e.fromY, 40))
 			.addComponent(BitmapComponent.build(_tileMap.getTile(TileId.CAT_0)))
 			.addComponent(XYSpeedComponent.build(sx, sy))
 			.addComponent(new CatComponent())
 			.addComponent(new DamagebleComponent());
+		
+		var marker = em().allocateEntity()
+			.addComponent(CenterPointPositionComponent.build(0,0, 8))
+			.addComponent(AngularMovementComponent.build(0, 0))
+			.addComponent(BitmapComponent.build(_tileMap.getTile(TileId.CAT_MARKER)))
+			.addComponent(CatTrackerComponent.build(cat.getEntity()));
 	}
 	
 }

@@ -7,6 +7,7 @@ import game.components.GameScreenComponent;
 import game.components.GunComponent;
 import game.components.PlayerComponent;
 import game.components.CenterPointPositionComponent;
+import game.components.TileMapComponent;
 import game.enums.TileId;
 import game.factory.BulletFactory;
 import game.factory.CatFactory;
@@ -20,6 +21,7 @@ import game.systems.MoveWithXYSpeedSystem;
 import game.systems.RenderBitmapsSystem;
 import game.systems.UpdateBulletsSystem;
 import game.systems.UpdateCatsSystem;
+import game.systems.UpdateCatTrackersSystem;
 import game.systems.UpdateDamagablesSystem;
 import game.systems.UpdatePlayerSystem;
 import game.utils.Gun;
@@ -67,12 +69,14 @@ class GameScreen
 			.addComponent(GameScreenComponent.build(Lib.current.stage, 640, 480))
 			.addComponent(CameraComponent.build("camera", 0, 0, 640, 480))
 			.addComponent(new ViewPortComponent("main"))
-			.addComponent(TileModelComponent.build([tiles]))
+			.addComponent(TileModelComponent.build([tiles])) // ops, old crap. If I had more time I would remove this and ony use tileMapComponent which is much more supreior!
 			.addComponent(CanvasComponent.build(buildCanvas(640, 480)))
+			.addComponent(TileMapComponent.build(_tileMap))
+			.addComponent(TileLayerComponent.build("main", 10, map, 0.5, 0.5))
 			.addComponent(new GameComponent());
 			
-		_core.getEntManager().allocateEntity()
-			.addComponent(TileLayerComponent.build("main", 10, map, 0.5, 0.5));
+		//_core.getEntManager().allocateEntity()
+			
 		
 			
 		
@@ -107,8 +111,9 @@ class GameScreen
 		_core.addSystem(new BulletFactory(_tileMap), 6);
 		_core.addSystem(new CatFactory(_tileMap), 6);
 		_core.addSystem(new TextFactory(_tileMap), 6);
+		_core.addSystem(new UpdateCatTrackersSystem(), 6);
 		
-		_core.addSystem(new UpdateDamagablesSystem(), 5);
+		_core.addSystem(new UpdateDamagablesSystem(), 2);
 		
 		_core.addSystem(new RenderBitmapsSystem(Lib.current.stage), 1);
 		_core.addSystem(new RenderViewPortSystem("main", tiles), 1);
@@ -134,6 +139,7 @@ class GameScreen
 		_tileMap.mapTile(TileId.GUARD_0, bd, new Rectangle(64, 0, 64, 64));
 		_tileMap.mapTile(TileId.CAT_0, bd, new Rectangle(128, 0, 64, 64));
 		_tileMap.mapTile(TileId.BULLET_0, bd, new Rectangle(192, 0, 16, 16));
+		_tileMap.mapTile(TileId.CAT_MARKER, bd, new Rectangle(192, 16, 16, 16));
 		_tileMap.mapTile(TileId.TEXT_CAT_KIDNAPPED, bd, new Rectangle(192, 64, 128, 32));
 		_tileMap.mapTile(TileId.TEXT_CAT_KILLED, bd, new Rectangle(192, 96, 128, 32));
 	}
