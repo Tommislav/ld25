@@ -21,6 +21,7 @@ class ShopTextField extends TextField
 		this.autoSize = TextFieldAutoSize.LEFT;
 		this.selectable = false;
 		this.mouseEnabled = false;
+		this.textColor = 0xffffff;
 		
 	}
 	
@@ -30,7 +31,6 @@ class ShopTextField extends TextField
 	}
 	
 	public function setIsAvaliable(val:Bool) {
-		this.textColor = (val) ? 0xffffff : 0x333333;
-		this.defaultTextFormat = _format;
+		this.alpha = (val) ? 1: 0.2;
 	}
 }

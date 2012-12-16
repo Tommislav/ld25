@@ -10,12 +10,13 @@ import nme.events.MouseEvent;
  */
 
 class SelectItem extends Sprite
-{
-
+{		
 	private var _index:Int;
 	private var _labels:Array<String>;
 	private var _cost:Array<Int>;
 	private var _tf:ShopTextField;
+	
+	private var _inStock:Bool;
 	
 	private var _hand:Bitmap;
 	
@@ -24,6 +25,7 @@ class SelectItem extends Sprite
 		super();
 		
 		_index = index;
+		_inStock = true;
 		
 		this.graphics.beginFill(0x000000, 1);
 		this.graphics.drawRect(0, 0, 166, 46);
@@ -31,10 +33,10 @@ class SelectItem extends Sprite
 		
 		_cost = [
 			100,
-			200,
-			800,
-			1000,
-			500,
+			100,
+			100,
+			100,
+			100,
 			0
 		];
 		
@@ -65,10 +67,12 @@ class SelectItem extends Sprite
 	}
 	
 	public function enter() {
-		addEventListener(MouseEvent.MOUSE_OVER, onOver);
-		addEventListener(MouseEvent.MOUSE_OUT, onOut);
-		addEventListener(MouseEvent.CLICK, onSelect);
-		this.useHandCursor = true;
+		if (_inStock == true) {
+			addEventListener(MouseEvent.MOUSE_OVER, onOver);
+			addEventListener(MouseEvent.MOUSE_OUT, onOut);
+			addEventListener(MouseEvent.CLICK, onSelect);
+			this.useHandCursor = true;
+		}
 	}
 	
 	public function exit() {
@@ -78,16 +82,25 @@ class SelectItem extends Sprite
 		this.useHandCursor = false;
 	}
 	
+	public function outOfStock() {
+		setSelectable(false);
+		_tf.setIsAvaliable(false);
+		_inStock = false;
+	}
+	
 	
 	
 	public function setSelectable(val:Bool) {
-		exit();
-		
-		if (val)
-			enter();
-		
-		_tf.setIsAvaliable(val);
+		if (_inStock) {
+			exit();
+			
+			if (val)
+				enter();
+			
+			_tf.setIsAvaliable(val);
+		}
 	}
+	
 	
 	public function getCost() {
 		return _cost[_index];

@@ -91,10 +91,10 @@ class GameScreen
 		
 		
 		var gunComp:GunComponent = new GunComponent();
-		gunComp.addGun(Gun.build(0, 36, 0, 25, ""));
-		gunComp.addGun(Gun.build(Math.PI, 36, Math.PI, 25, ""));
-		gunComp.addGun(Gun.build(Math.PI/2, 36, Math.PI/2, 25, ""));
-		gunComp.addGun(Gun.build(Math.PI*1.5, 36, Math.PI*1.5, 25, ""));
+		gunComp.addGun(Gun.build(0, 36, 0, 35, ""));
+		//gunComp.addGun(Gun.build(Math.PI, 36, Math.PI, 25, ""));
+		//gunComp.addGun(Gun.build(Math.PI/2, 36, Math.PI/2, 25, ""));
+		//gunComp.addGun(Gun.build(Math.PI*1.5, 36, Math.PI*1.5, 25, ""));
 		
 		
 		// Hero (or in this case: villain) entity

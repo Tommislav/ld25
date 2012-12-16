@@ -1,5 +1,8 @@
 package game.spaceshop;
+import game.components.DamagebleComponent;
 import game.components.GameComponent;
+import game.components.GunComponent;
+import game.utils.Gun;
 import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.Sprite;
@@ -11,10 +14,15 @@ import nme.display.Sprite;
 
 class SpaceShopScreen extends Sprite
 {
+	private var _hintHasBeenDisplayed:Bool;
+	
 	private var _moneyText:ShopTextField;
 	private var _moneyInstructions:ShopTextField;
 	private var _shopItems:Array<SelectItem>;
 	private var _gameComp:GameComponent;
+	private var _healthComp:DamagebleComponent;
+	private var _gunComponent:GunComponent;
+	
 	
 	public function new() 
 	{
@@ -54,16 +62,10 @@ class SpaceShopScreen extends Sprite
 		}
 	}
 	
-	public function openShop(gameComp:GameComponent) {
+	public function openShop(gameComp:GameComponent, playerHealthComponent:DamagebleComponent, playerGunComponent:GunComponent) {
 		_gameComp = gameComp;
-		
-		if (gameComp.money == 0) {
-			_moneyText.text = "";
-			_moneyInstructions.text = "You have no money!\nKidnap cats for easy cash!\nJust make sure to catch them\nalive!";
-		} else {
-			_moneyText.text = "$" + gameComp.money;
-			_moneyInstructions.text = "";
-		}
+		_healthComp = playerHealthComponent;
+		_gunComponent = playerGunComponent;
 		
 		for (i in 0..._shopItems.length) {
 			_shopItems[i].enter();
@@ -84,13 +86,57 @@ class SpaceShopScreen extends Sprite
 	private function onBuyItem(e:ShopEvent) {
 		if (e.shopItem == 5) {
 			exitShop();
+			return;
 		}
+		
+		if (e.shopItem == 0) {
+			_healthComp.health += 1;
+		}
+		
+		if (e.shopItem == 1) {
+			_gameComp.catRadarEnabled = true;
+			_shopItems[e.shopItem].outOfStock();
+		}
+		
+		if (e.shopItem == 2) {
+			// add TailGun
+			_gunComponent.addGun(Gun.build(Math.PI, 36, Math.PI, 50, ""));
+			_shopItems[e.shopItem].outOfStock();
+		}
+		
+		if (e.shopItem == 3) {
+			// flank guns
+			_gunComponent.addGun(Gun.build(Math.PI/2, 36, Math.PI/2, 50, ""));
+			_gunComponent.addGun(Gun.build(Math.PI * 1.5, 36, Math.PI * 1.5, 50, ""));
+			_shopItems[e.shopItem].outOfStock();
+		}
+		
+		if (e.shopItem == 4) {
+			// shoot faster
+			for (gun in _gunComponent.allGuns) {
+				if (gun.reloadDuration > 20) {
+					gun.reloadDuration -= 5;
+				}
+			}
+		}
+		
+		_gameComp.money -= _shopItems[e.shopItem].getCost();
+		updateAvailableItems();
 	}
 	
 	private function updateAvailableItems() {
 		for (i in 0..._shopItems.length) {
 			var cost = _shopItems[i].getCost();
-			_shopItems[i].setSelectable(_gameComp.money >= cost);
+			_shopItems[i].setSelectable((_gameComp.money >= cost));
+		}
+		
+		if (_gameComp.money == 0 && !_hintHasBeenDisplayed) {
+			_moneyText.text = "";
+			_moneyInstructions.text = "You have no money!\nKidnap cats for easy cash!\nJust make sure to catch them\nalive!";
+		} else {
+			_hintHasBeenDisplayed = true;
+			_moneyText.text = "$" + _gameComp.money;
+			_moneyInstructions.text = "";
 		}
 	}
 	

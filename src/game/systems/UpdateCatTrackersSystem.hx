@@ -5,6 +5,7 @@ import game.components.CatComponent;
 import game.components.CatTrackerComponent;
 import game.components.CenterPointPositionComponent;
 import game.components.DamagebleComponent;
+import game.components.GameComponent;
 import game.components.PlayerComponent;
 import game.events.GameEvent;
 import se.salomonsson.ent.EntityEvent;
@@ -57,6 +58,7 @@ class UpdateCatTrackersSystem extends Sys
 		
 		var playerPos = player[0].comp(CenterPointPositionComponent);
 		var camera = em().getComp(CameraComponent);
+		var gameComp = em().getComp(GameComponent);
 		
 		var catTrackerEnt = em().getEWC([CatTrackerComponent]);
 		for (tracker in catTrackerEnt) {
@@ -76,7 +78,11 @@ class UpdateCatTrackersSystem extends Sys
 				var catPos = em().getComponentOnEntity(catId, CenterPointPositionComponent);
 				
 				var catVisible = camera.inView(catPos);
-				tracker.comp(BitmapComponent).holder.alpha = catVisible ? 0.1 : 1;
+				var arrowVisible = !catVisible && gameComp.catRadarEnabled;
+				tracker.comp(BitmapComponent).holder.visible = arrowVisible;
+				
+				if (!arrowVisible)
+					continue;
 				
 				var dx = catPos.x - playerPos.x;
 				var dy = catPos.y - playerPos.y;

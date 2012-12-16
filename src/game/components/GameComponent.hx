@@ -16,6 +16,7 @@ class GameComponent implements IComponent
 	
 	public var levelBounds:Rectangle;
 	public var playerDamageCounter:Int;
+	public var catRadarEnabled:Bool;
 	
 	public function new() 
 	{

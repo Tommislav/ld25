@@ -1,6 +1,8 @@
 package game.systems;
 import game.components.CenterPointPositionComponent;
+import game.components.DamagebleComponent;
 import game.components.GameComponent;
+import game.components.GunComponent;
 import game.components.PlayerComponent;
 import game.components.ShopComponent;
 import game.spaceshop.ShopEvent;
@@ -45,12 +47,18 @@ class UpdateSpaceShopSystem extends Sys
 					_alreadyBeenHit = true;
 					// ## LAUNCH SHOP!! ##
 					
+					var gameComp = em().getComp(GameComponent);
+					var healthComp = player.comp(DamagebleComponent);
+					var gunComp = player.comp(GunComponent);
+					
+					//gameComp.money = 200; // debug
+					
 					Lib.current.stage.addChild(_shoppingScreen);
-					_shoppingScreen.openShop(em().getComp(GameComponent));
+					_shoppingScreen.openShop(gameComp, healthComp, gunComp);
 					_shoppingScreen.addEventListener(ShopEvent.EXIT_SHOP, onExitShoppingScreen);
 					getManager().pause();
 					
-					var levelBounds = em().getComp(GameComponent).levelBounds;
+					var levelBounds = gameComp.levelBounds;
 					//pos.x = (Math.random() * levelBounds.width - 256) + 128;
 					//pos.y = (Math.random() * levelBounds.height - 256) + 128;
 				}
