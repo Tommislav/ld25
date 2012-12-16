@@ -15,6 +15,8 @@ class TileId
 	
 	static public inline var TEXT_CAT_KILLED	:Int = 6;
 	static public inline var TEXT_CAT_KIDNAPPED	:Int = 7;
+	static public inline var SHOP_0				:Int = 8;
+	static public inline var SHOP_1				:Int = 9;
 	
 	
 	

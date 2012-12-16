@@ -7,6 +7,7 @@ import game.components.GameScreenComponent;
 import game.components.GunComponent;
 import game.components.PlayerComponent;
 import game.components.CenterPointPositionComponent;
+import game.components.ShopComponent;
 import game.components.TileMapComponent;
 import game.enums.EnemyType;
 import game.enums.TileId;
@@ -31,6 +32,7 @@ import game.systems.UpdateDamagablesSystem;
 import game.systems.UpdateEscortingEntitiesSystem;
 import game.systems.UpdatePlayerSystem;
 import game.systems.RenderBackgroundTilesSystem;
+import game.systems.UpdateSpaceShopSystem;
 import game.utils.Gun;
 import game.utils.TileMap;
 import nme.Assets;
@@ -104,6 +106,11 @@ class GameScreen
 			.addComponent(new DamagebleComponent(3))
 			.addComponent(new PlayerComponent());
 		
+		// The shop
+		_core.getEntManager().allocateEntity()
+			.addComponent(CenterPointPositionComponent.build(100, 100, 64))
+			.addComponent(BitmapComponent.build(_tileMap.getTile(TileId.SHOP_0)))
+			.addComponent(new ShopComponent());
 		
 		_core.addSystem(new KeyboardInputSystem(), 9);
 		_core.addSystem(new GameSystem(), 9);
@@ -126,6 +133,7 @@ class GameScreen
 		_core.addSystem(new UpdateEscortingEntitiesSystem(), 6);
 		_core.addSystem(new FaceDirectionSystem(), 6);
 		_core.addSystem(new EnemySystem(), 6);
+		_core.addSystem(new UpdateSpaceShopSystem(), 6);
 		
 		_core.addSystem(new UpdateDamagablesSystem(), 2);
 		
@@ -170,6 +178,8 @@ class GameScreen
 		_tileMap.mapTile(TileId.CAT_MARKER, bd, new Rectangle(192, 16, 16, 16));
 		_tileMap.mapTile(TileId.TEXT_CAT_KIDNAPPED, bd, new Rectangle(192, 64, 128, 32));
 		_tileMap.mapTile(TileId.TEXT_CAT_KILLED, bd, new Rectangle(192, 96, 128, 32));
+		_tileMap.mapTile(TileId.SHOP_0, bd, new Rectangle(320, 0, 128, 128));
+		_tileMap.mapTile(TileId.SHOP_1, bd, new Rectangle(448, 0, 128, 128));
 	}
 	
 	
